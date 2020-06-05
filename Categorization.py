@@ -49,7 +49,7 @@ def height_categorize(clist, dh):
     lowest_alt = min(alt_list)
     highest_alt = max(alt_list)
 
-    dalt = round(highest_alt-lowest_alt,2)
+    dalt = round(highest_alt-lowest_alt,3)
 
     # Cal number of layer
     NL = ceil(dalt/dh)

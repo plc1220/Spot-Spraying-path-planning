@@ -16,10 +16,10 @@ def F(sm,sl,di,dlist,PCY,PCX):
 
     return path,m,c
 
-def F2(sh, dlist):
+def F2(sh,m,di,dlist):
     dh = sh
     d = height_categorize(dlist,dh)
-    zzlist = zigzag(slicing(d,0.3,0))
+    zzlist = zigzag(slicing(d,m,di))
     arr = np.array(dlist)
     path = arr[zzlist]
 

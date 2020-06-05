@@ -12,8 +12,6 @@ def slicing(di,m,direction):
                     item_final = []
                     element = d[i][j]
                     item.append(element)
-                    #sorted(item, key=lambda x:x[1])
-                    #item = sorted(item, key=lambda x:x[2],reverse=False)
                     item = sorted(item, key=lambda x:x[1],reverse=False)
                     for k in range(len(item)):
                         index = int(item[k][0])
@@ -28,11 +26,9 @@ def slicing(di,m,direction):
                     item_final = []
                     element = d[i][j]
                     item.append(element)
-                    #item = sorted(item, key=lambda x:x[2],reverse=True)
                     item = sorted(item, key=lambda x:x[1],reverse=True)
                     for k in range(len(item)):
                         index = int(item[k][0])
-                        #index = index+1
                         item_final.append(index)
                 full.append(item_final)
         full1 = [full for full,_ in itertools.groupby(full)]
@@ -45,12 +41,9 @@ def slicing(di,m,direction):
                     item_final = []
                     element = d[i][j]
                     item.append(element)
-                    #sorted(item, key=lambda x:x[1])
                     item = sorted(item, key=lambda x:x[2],reverse=False)
-                    #item = sorted(item, key=lambda x:x[1],reverse=False)
                     for k in range(len(item)):
                         index = int(item[k][0])
-                        #index = index+1
                         item_final.append(index)
                 full.append(item_final)
         elif direction == 1:
@@ -62,10 +55,8 @@ def slicing(di,m,direction):
                     element = d[i][j]
                     item.append(element)
                     item = sorted(item, key=lambda x:x[2],reverse=True)
-                    #item = sorted(item, key=lambda x:x[1],reverse=True)
                     for k in range(len(item)):
                         index = int(item[k][0])
-                        #index = index+1
                         item_final.append(index)
                 full.append(item_final)        
         full1 = [full for full,_ in itertools.groupby(full)]

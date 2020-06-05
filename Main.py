@@ -2,9 +2,10 @@ from ReadCSV import read
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import axes3d
 from matplotlib.widgets import Slider
 from Polygon import Concave_hull
-from Function import F
+from Function import F, F2
 from Flight import distance_calculator, time_calculator, weight_calculator
 from Write_mission import waypoint
 
@@ -14,20 +15,18 @@ dlist = Initiate[0]
 Name = Initiate[1]
 N = len(dlist)
 clist = []
+xlist = []
+ylist = []
+zlist = []
 for i in range(N):
     x = dlist[i][1]
     y = dlist[i][2]
-    xy = x,y
-    clist.append(xy)
-
-xlist = []
-ylist = []
-for i in range (N):
-    x = clist[i][0]
-    y = clist[i][1]
-    xy = x,y
+    z = dlist[i][3]
+    xyz = x,y,z
+    clist.append(xyz)
     xlist.append(x)
     ylist.append(y)
+    zlist.append(z)
 
 # Declare categorization method
 while 1:
@@ -37,7 +36,55 @@ while 1:
     else:
         print("Please input 1 or 2 only")
 
-if user_choice == '2':
+if user_choice == '1':
+    # Declare initial height difference
+    h0 = 2
+
+    # Plot
+    fig, ax = plt.subplots()
+    plt.subplots_adjust(left=0.25,bottom=0.25)
+    ax.scatter(xlist, ylist, color='blue')
+    ax.set_xlim(min(xlist)-0.00005,max(xlist)+0.00005)
+    ax.set_ylim(min(ylist)-0.00005,max(ylist)+0.00005)
+
+    # Create Slider
+    axcolor = 'lightgoldenrodyellow'
+    axh = plt.axes([0.25, 0.105, 0.65, 0.03], facecolor=axcolor)
+    sh = Slider(axh, 'Height', 1, 3 , valinit = h0, valstep = 0.125)
+
+    axdirection = plt.axes([0.8, 0.005, 0.1, 0.04])
+    sdi = Slider(axdirection, 'Direction', 0, 1 , valinit = 0, valstep = 1)
+
+    axm = plt.axes([0.8, 0.055, 0.1, 0.04], facecolor=axcolor)
+    sm = Slider(axm, 'Sort', 0, 1 , valinit = 0, valstep = 1)
+
+    # plot original
+    l, = ax.plot(xlist,ylist,'bo-',marker='s')
+    
+    # Run categorization
+    # Define update function
+    def update(val):
+        data = F2(sh.val,sm.val,sdi.val,dlist)
+        # Plot
+        list1 = data.tolist()
+        x = [p[1] for p in list1]
+        y = [p[2] for p in list1]
+        # z = [p[3] for p in list1]
+        l.set_xdata(x)
+        l.set_ydata(y)
+        #l.set_zdata(z)
+        fig.canvas.draw()
+
+    # Show
+    sh.on_changed(update)
+    sdi.on_changed(update)
+    sm.on_changed(update)
+
+    plt.show()
+
+    path = F2(sh.val,sm.val,sdi.val,dlist)    
+    
+elif user_choice == '2':
     # Declare initial gradient
     m0 = 0.5
 
@@ -96,8 +143,10 @@ if user_choice == '2':
 
     plt.show()
 
+    path = F(sm.val,slayer.val,sdi.val,dlist,PCY,PCX)[0]
+
 # Save mission
-path = F(sm.val,slayer.val,sdi.val,dlist,PCY,PCX)[0]
+# path = F(sm.val,slayer.val,sdi.val,dlist,PCY,PCX)[0]
 df = pd.DataFrame(data=path, columns=["no", "x","y","z"])
 print(df)
 spray_data = waypoint(df,Name)
@@ -118,6 +167,3 @@ print( "Total time taken:"+str(t_data[0])+' min'+"\nAverage Time:"+#
        str(t_data[1])+' s')
 w_data = weight_calculator(10,clist,150)
 print("Recommend pesticide for this flight:"+str(w_data[2])+' litre')
-
-
-    
