@@ -2,12 +2,9 @@ from ReadCSV import read
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import axes3d
 from matplotlib.widgets import Slider
 from Polygon import Concave_hull
 from Function import F, F2
-from Flight import distance_calculator, time_calculator, weight_calculator
-from Write_mission import waypoint
 
 # Get lat lon from csv
 Initiate = read()
@@ -149,21 +146,4 @@ elif user_choice == '2':
 # path = F(sm.val,slayer.val,sdi.val,dlist,PCY,PCX)[0]
 df = pd.DataFrame(data=path, columns=["no", "x","y","z"])
 print(df)
-spray_data = waypoint(df,Name)
-
-# Do Flight analysis
-trees = path.tolist()
-lat = [p[1] for p in trees]
-lon = [p[2] for p in trees]
-
-print("Number of trees:"+str(len(lat)))
-
-d_data = distance_calculator(lat,lon)
-print("Total distance:"+str(d_data[0])+' m'+"\nAverage distance:"+#
-      str(d_data[1])+' m')
-
-t_data = time_calculator(d_data[2],1,3,spray_data[0])
-print( "Total time taken:"+str(t_data[0])+' min'+"\nAverage Time:"+#
-       str(t_data[1])+' s')
-w_data = weight_calculator(10,clist,150)
-print("Recommend pesticide for this flight:"+str(w_data[2])+' litre')
+df.to_csv('dataset/%s/%s_adjusted.csv'% (Name, Name), index = False)
